@@ -1,0 +1,12 @@
+[package]
+name = "roguelike2"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+rltk = "0.8"
+hecs = "0.2"
+rand = "0.7"
+
+[profile.release]
+lto = true
