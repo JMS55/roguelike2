@@ -55,28 +55,28 @@ impl GameState for Game {
 
             // PlayerAI
             let input = INPUT.lock();
-            let mut movement = Position { x: 0, y: 0 };
+            let mut x = 0;
+            let mut y = 0;
             if input.is_key_pressed(VirtualKeyCode::W) {
-                movement.y = -1;
+                y = -1;
             }
             if input.is_key_pressed(VirtualKeyCode::A) {
-                movement.x = -1;
+                x = -1;
             }
             if input.is_key_pressed(VirtualKeyCode::S) {
-                movement.y = 1;
+                y = 1;
             }
             if input.is_key_pressed(VirtualKeyCode::D) {
-                movement.x = 1;
+                x = 1;
             }
-            if movement.x != 0 && movement.y != 0 {
+            if x != 0 && y != 0 {
                 if self.update_counter % 4 < 2 {
-                    movement.y = 0;
+                    y = 0;
                 } else {
-                    movement.x = 0;
+                    x = 0;
                 }
             }
-            self.world
-                .try_move_entity(self.player_entity, movement.x, movement.y);
+            self.world.try_move_entity(self.player_entity, x, y);
 
             // WanderAI
             let entities = self
@@ -86,11 +86,16 @@ impl GameState for Game {
                 .map(|(entity, (_, _))| entity)
                 .collect::<Vec<Entity>>();
             for entity in entities {
-                self.world.try_move_entity(
-                    entity,
-                    self.rng.gen_range(-1, 2),
-                    self.rng.gen_range(-1, 2),
-                );
+                let mut x = self.rng.gen_range(-1, 2);
+                let mut y = self.rng.gen_range(-1, 2);
+                if x != 0 && y != 0 {
+                    if self.update_counter % 4 < 2 {
+                        y = 0;
+                    } else {
+                        x = 0;
+                    }
+                }
+                self.world.try_move_entity(entity, x, y);
             }
         }
 
